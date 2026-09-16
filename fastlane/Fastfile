@@ -27,6 +27,8 @@ platform :ios do
       skip_screenshots: true,
       submit_for_review: true, # 上传后直接提审；若后台元数据不齐会失败，属正常校验
       automatic_release: false,
+      # API Key 认证暂不支持内购预检，必须显式关闭，否则 deliver 直接报错
+      precheck_include_in_app_purchases: false,
       force: true
     )
   end
