@@ -29,6 +29,10 @@ platform :ios do
       automatic_release: false,
       # API Key 认证暂不支持内购预检，必须显式关闭，否则 deliver 直接报错
       precheck_include_in_app_purchases: false,
+      # 出口合规声明：标准 App（仅用 HTTPS 等常规加密，属豁免类）填 false
+      submission_information: {
+        export_compliance_uses_encryption: false
+      },
       force: true
     )
   end
@@ -64,6 +68,10 @@ platform :ios do
       submit_for_review: true,
       automatic_release: false,
       precheck_include_in_app_purchases: false,
+      # 出口合规声明：标准 App（仅用 HTTPS 等常规加密，属豁免类）填 false
+      submission_information: {
+        export_compliance_uses_encryption: false
+      },
       force: true
     )
   end
@@ -102,6 +110,10 @@ platform :ios do
       ipa: "build/Funova-A-iOS.ipa",
       submit_for_review: true,
       automatic_release: false,
+      # 出口合规声明：标准 App（仅用 HTTPS 等常规加密，属豁免类）填 false
+      submission_information: {
+        export_compliance_uses_encryption: false
+      },
       force: true
     )
   end
