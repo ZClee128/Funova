@@ -20,8 +20,9 @@
 
 ## 二、两种提交方式（见 `fastlane/Fastfile`）
 
-- **方式 A `upload_ipa`（默认，当前可用）**：直接上传仓库里的 `Funova-A-iOS-20260916.ipa`。
-- **方式 B `build_and_upload`（有源码后）**：把 Xcode 工程加进仓库，改为 `gym` 从源码打包再上传（需在 Secrets 里配好分发证书与 profile）。
+- **方式 A `upload_ipa`（默认，当前可用）**：直接上传仓库里的 `Funova-A-iOS-20260916.ipa`。注意：该 IPA 的构建号（CFBundleVersion）写死为 `1`，**每个构建号在 App Store Connect 只能上传一次**。首次成功上传后，再传同一 IPA 会被拒（`bundle version must be higher than the previously uploaded version`）。
+- **方式 A2 `submit_existing_build`**：IPA 已上传过时，直接提交已上传的构建（默认构建号 `1`）去审核，**不再重传二进制**。工作流支持手动选择 lane 触发（`workflow_dispatch` → lane=`submit_existing_build`）。
+- **方式 B `build_and_upload`（有源码后）**：把 Xcode 工程加进仓库，改为 `gym` 从源码打包再上传（需在 Secrets 里配好分发证书与 profile，才能重签新构建号）。
 
 GitHub Actions 工作流默认跑方式 A（`.github/workflows/ios-submit.yml`）。
 
