@@ -1,0 +1,28 @@
+# ===== 密钥 / 私钥：绝对不要提交进仓库 =====
+*.p12
+*.p8
+*.pfx
+*.key
+*.cer
+
+# ===== Xcode / 构建产物（若后续加入源码） =====
+DerivedData/
+build/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.moved-aside
+*.hmap
+
+# ===== fastlane 临时文件 =====
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/
+fastlane/README.md
+fastlane/certs/
+
+# ===== 系统 / 编辑器 =====
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

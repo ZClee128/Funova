@@ -1,0 +1,77 @@
+default_platform(:ios)
+
+platform :ios do
+  # =========================================================
+  # 方式 A：直接上传仓库里已编译好的 IPA（当前即可用）
+  # 经核验，该 IPA 已用 App Store 分发证书签名
+  # （get-task-allow: false、无设备列表、bundle id 一致），
+  # 因此无需重新签名，可直接上传到 App Store Connect。
+  # 前置条件：App Store Connect API Key 已配置为仓库 Secrets。
+  # =========================================================
+  desc "Upload the prebuilt IPA to App Store Connect and submit for review"
+  lane :upload_ipa do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APPSTORE_CONNECT_API_KEY_KEY_ID"],
+      issuer_id: ENV["APPSTORE_CONNECT_API_KEY_ISSUER_ID"],
+      key_content: ENV["APPSTORE_CONNECT_API_KEY_P8"],
+      duration: 1200,
+      in_house: false
+    )
+
+    deliver(
+      api_key: api_key,
+      app_identifier: "com.mmhua.com",
+      team_id: "S88VU4PBFB",
+      ipa: "Funova-A-iOS-20260916.ipa",
+      skip_metadata: true,     # 元数据（名称/描述/截图等）需先在 App Store Connect 后台填好
+      skip_screenshots: true,
+      submit_for_review: true, # 上传后直接提审；若后台元数据不齐会失败，属正常校验
+      automatic_release: false,
+      force: true
+    )
+  end
+
+  # =========================================================
+  # 方式 B：若后续把 Xcode 源码加入仓库，则从源码打包再上传
+  # 前置条件：仓库 Secrets 里放好分发证书与分发 profile
+  #   DIST_CERT_P12 (base64) / DIST_CERT_PASSWORD / DIST_PROVISIONING_PROFILE (base64)
+  # 也可用 fastlane match 统一管理证书（推荐）。
+  # =========================================================
+  desc "Build from source (Xcode project) then upload & submit"
+  lane :build_and_upload do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APPSTORE_CONNECT_API_KEY_KEY_ID"],
+      issuer_id: ENV["APPSTORE_CONNECT_API_KEY_ISSUER_ID"],
+      key_content: ENV["APPSTORE_CONNECT_API_KEY_P8"],
+      duration: 1200,
+      in_house: false
+    )
+
+    setup_ci if ENV["CI"]
+
+    # 方式 1：直接安装 Secrets 中的分发证书与 profile
+    # install_certificate(
+    #   certificate_path: "fastlane/certs/dist.p12",
+    #   certificate_password: ENV["DIST_CERT_PASSWORD"]
+    # )
+    # 方式 2（推荐）：用 match 从私有仓库拉取证书
+    # match(type: "appstore", readonly: true)
+
+    gym(
+      scheme: "Pro91",          # 替换为你的 Xcode scheme
+      export_method: "app-store",
+      output_directory: "build",
+      output_name: "Funova-A-iOS.ipa"
+    )
+
+    deliver(
+      api_key: api_key,
+      app_identifier: "com.mmhua.com",
+      team_id: "S88VU4PBFB",
+      ipa: "build/Funova-A-iOS.ipa",
+      submit_for_review: true,
+      automatic_release: false,
+      force: true
+    )
+  end
+end

@@ -1,0 +1,31 @@
+name: iOS Build & App Store Submit
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  submit:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Install dependencies
+        run: bundle install
+
+      - name: Upload & Submit to App Store Connect
+        env:
+          APPSTORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APPSTORE_CONNECT_API_KEY_KEY_ID }}
+          APPSTORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APPSTORE_CONNECT_API_KEY_ISSUER_ID }}
+          APPSTORE_CONNECT_API_KEY_P8: ${{ secrets.APPSTORE_CONNECT_API_KEY_P8 }}
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+        run: bundle exec fastlane ios upload_ipa

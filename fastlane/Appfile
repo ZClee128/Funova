@@ -1,0 +1,11 @@
+# App Store Connect / Apple Developer 身份配置
+# 以下值均来自对 mm.mobileprovision 与 IPA 内嵌签名的核验结果
+
+app_identifier "com.mmhua.com"   # IPA 的 bundle id（已核验一致）
+team_id "S88VU4PBFB"             # Developer Team ID（来自 mm.mobileprovision）
+
+# App Store Connect 团队 ID（通常为纯数字，如与 team_id 不同请取消注释填写）
+# itc_team_id "123456789"
+
+# 用于登录的 Apple ID；使用 App Store Connect API Key 时非必填
+apple_id ENV["FASTLANE_USER"]
