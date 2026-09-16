@@ -5,6 +5,15 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      lane:
+        description: '要运行的 fastlane lane（默认上传现成 IPA）'
+        required: true
+        default: 'upload_ipa'
+        type: choice
+        options:
+          - upload_ipa
+          - submit_build
 
 jobs:
   submit:
@@ -28,4 +37,4 @@ jobs:
           APPSTORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APPSTORE_CONNECT_API_KEY_ISSUER_ID }}
           APPSTORE_CONNECT_API_KEY_P8: ${{ secrets.APPSTORE_CONNECT_API_KEY_P8 }}
           FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-        run: bundle exec fastlane ios upload_ipa
+        run: bundle exec fastlane ios ${{ github.event.inputs.lane || 'upload_ipa' }}

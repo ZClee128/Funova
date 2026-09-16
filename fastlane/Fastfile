@@ -39,6 +39,32 @@ platform :ios do
   #   DIST_CERT_P12 (base64) / DIST_CERT_PASSWORD / DIST_PROVISIONING_PROFILE (base64)
   # 也可用 fastlane match 统一管理证书（推荐）。
   # =========================================================
+  # =========================================================
+  # 方式 A2：IPA 已传过（构建号被占用），直接提交已上传的构建
+  # 适用于“IPA 是现成编译包、构建号固定”的场景——避免重复上传被拒
+  # =========================================================
+  desc "Submit an already-uploaded build for review without re-uploading the binary"
+  lane :submit_build do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APPSTORE_CONNECT_API_KEY_KEY_ID"],
+      issuer_id: ENV["APPSTORE_CONNECT_API_KEY_ISSUER_ID"],
+      key_content: ENV["APPSTORE_CONNECT_API_KEY_P8"],
+      duration: 1200,
+      in_house: false
+    )
+
+    submit_build(
+      api_key: api_key,
+      app_identifier: "com.mmhua.com",
+      team_id: "S88VU4PBFB",
+      build_number: "1",            # 已上传的构建号（v1.0.0 时已传，勿重传）
+      submit_for_review: true,
+      automatic_release: false,
+      precheck_include_in_app_purchases: false,
+      force: true
+    )
+  end
+
   desc "Build from source (Xcode project) then upload & submit"
   lane :build_and_upload do
     api_key = app_store_connect_api_key(
