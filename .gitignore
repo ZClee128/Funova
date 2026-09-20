@@ -26,3 +26,6 @@ fastlane/certs/
 Thumbs.db
 .idea/
 .vscode/
+
+# ===== WorkBuddy 内部数据（记忆/技能，非项目产物，不入库） =====
+.workbuddy/
