@@ -1,9 +1,6 @@
 name: iOS Build & App Store Submit
 
 on:
-  push:
-    tags:
-      - 'v*'
   workflow_dispatch:
     inputs:
       lane:
