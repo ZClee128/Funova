@@ -21,6 +21,7 @@
 ## 二、两种提交方式（见 `fastlane/Fastfile`）
 
 - **方式 A `upload_ipa`（默认，当前可用）**：直接上传仓库里的 `FunovaiOSreview-20260921.ipa`，并**自动带上审核回复文案（APP_REVIEW_NOTES.txt）+ 录屏附件（app_review_recording.mp4）+ 自动提审**。注意：该 IPA 的构建号（CFBundleVersion）写死，**每个构建号在 App Store Connect 只能上传一次**。当前包构建号 `5`、版本 `0.1.13`。
+  - ⚠️ 关键修复：fastlane 的 `deliver` 在 `skip_metadata: true` 时会直接 `return`，**不会**写入审核备注/附件。因此回复文案+录屏改由独立的 `apply_review_info` lane 通过 App Store Connect API 直接写入 **App Review Information**，且必须在 `deliver`（含 `submit_for_review`）之前调用，确保提审时审核员能看到。
   - 录屏附件：工作流已固定读仓库内 `app_review_recording.mp4` 作为 App Review Attachment 自动上传。要更新录屏，直接替换该文件即可。
   - 文案路径：工作流已固定读仓库内 `APP_REVIEW_NOTES.txt`，可用 `APP_REVIEW_NOTES_FILE` 覆盖。
 - **方式 A2 `submit_existing_build`**：IPA 已上传过时，直接提交已上传的构建（默认构建号 `5`）去审核，**不再重传二进制**。工作流支持手动选择 lane 触发（`workflow_dispatch` → lane=`submit_existing_build`）。
@@ -74,7 +75,16 @@ GitHub Actions 工作流**仅手动触发**（`workflow_dispatch`），默认跑
 
 ---
 
-## 五、合规提醒（务必确认）
+## 五、回复苹果的记录在哪里看
+
+- **本地/仓库（回复原文）**：`APP_REVIEW_NOTES.txt`（纯英文 6 点说明）= `APP_REVIEW_RESPONSE.md`（同一份的 Markdown 版）。这就是我们替你写的"回复"。
+- **App Store Connect（提交成功后审核员看到的回复）**：`Funova` → **App Store** 标签页 → 版本 `0.1.13` → 页面下方 **App Review Information（审核信息）** 区块：
+  - **Notes（备注）**：那 6 点英文说明。
+  - **App Review Attachment（附件）**：`app_review_recording.mp4` 录屏。
+  - 这两个字段由 `apply_review_info` lane 通过 API 写入，**不会**出现在 Resolution Center（消息中心）聊天框里——我们的自动化不往聊天框发消息（fastlane 无法可靠代发）。若你想在聊天框也留一句，需手动在 Resolution Center 点。
+- 提交被拒的原文（Apple 的 Guideline 2.1 通知）在 **Resolution Center（消息中心）** 里查看。
+
+## 六、合规提醒（务必确认）
 
 - 提审账号（`Pham Thi Nhung` / `S88VU4PBFB`）必须对 `com.mmhua.com` 这个 App **拥有合法权利**，且 App 内容需符合《App Store 审核指南》。
 - 该 IPA 显示名/可执行名均为 `Funova`，对外展示信息一致；但 bundle id 含 `com.mmhua.com`、团队为 `Pham Thi Nhung`，请确认这些与你在 App Store Connect 后台登记的信息一致，避免审核被拒。

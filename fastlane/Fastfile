@@ -28,6 +28,9 @@ platform :ios do
     attachment = ENV["APP_REVIEW_ATTACHMENT"]
     attachment = nil unless attachment && File.exist?(attachment)
 
+    # 先把回复文案+录屏写进 App Review Information（必须在 submit 之前）
+    apply_review_info
+
     deliver(
       api_key: api_key,
       app_identifier: "com.mmhua.com",
@@ -82,6 +85,9 @@ platform :ios do
     end
     attachment = ENV["APP_REVIEW_ATTACHMENT"]
     attachment = nil unless attachment && File.exist?(attachment)
+
+    # 先把回复文案+录屏写进 App Review Information（必须在 submit 之前）
+    apply_review_info
 
     deliver(
       api_key: api_key,
@@ -138,6 +144,9 @@ platform :ios do
     attachment = ENV["APP_REVIEW_ATTACHMENT"]
     attachment = nil unless attachment && File.exist?(attachment)
 
+    # 先把回复文案+录屏写进 App Review Information（必须在 submit 之前）
+    apply_review_info
+
     deliver(
       api_key: api_key,
       app_identifier: "com.mmhua.com",
@@ -162,6 +171,61 @@ platform :ios do
       },
       force: true
     )
+  end
+
+  # =========================================================
+  # 审核回复：直接写 App Review Information 的 Notes + 附件
+  # 关键：deliver 在 skip_metadata: true 时会直接 return，
+  # 不会写入审核备注/附件（已在 fastlane 源码确认）。
+  # 因此这里用 App Store Connect API 直接写，既保证回复送达，
+  # 又不触碰其它元数据（名称/描述/截图等）。
+  # 必须在 deliver（含 submit_for_review）之前调用，
+  # 这样提审时审核员就能看到备注与录屏。
+  # =========================================================
+  desc "Set App Review Information notes + attachment via App Store Connect API"
+  lane :apply_review_info do
+    require 'spaceship'
+    app_store_connect_api_key(
+      key_id: ENV["APPSTORE_CONNECT_API_KEY_KEY_ID"],
+      issuer_id: ENV["APPSTORE_CONNECT_API_KEY_ISSUER_ID"],
+      key_content: ENV["APPSTORE_CONNECT_API_KEY_P8"],
+      duration: 1200,
+      in_house: false
+    )
+
+    notes = nil
+    notes_file = ENV["APP_REVIEW_NOTES_FILE"] || "APP_REVIEW_NOTES.txt"
+    notes = File.read(notes_file).strip if File.exist?(notes_file)
+    attachment = ENV["APP_REVIEW_ATTACHMENT"]
+    attachment = nil unless attachment && File.exist?(attachment)
+
+    begin
+      app = Spaceship::ConnectAPI::App.find("com.mmhua.com")
+      version_string = ENV["APP_VERSION_STRING"] || "0.1.13"
+      versions = begin
+        app.get_app_store_versions
+      rescue
+        Spaceship::ConnectAPI::AppStoreVersion.all(filter: { app: app.id })
+      end
+      version = versions.find { |v| v.version_string == version_string && v.platform.to_s == "IOS" }
+      UI.user_error!("App Store Connect 上找不到版本 #{version_string}") unless version
+
+      detail = version.fetch_app_store_review_detail rescue nil
+      if detail
+        detail.update(attributes: { notes: notes })
+      else
+        detail = version.create_app_store_review_detail(attributes: { notes: notes })
+      end
+      UI.success("已写入 App Review Information 备注（Notes）")
+
+      if attachment
+        detail ||= version.fetch_app_store_review_detail
+        detail.upload_attachment(path: attachment)
+        UI.success("已上传审核附件：#{attachment}")
+      end
+    rescue => ex
+      UI.important("设置审核回复信息失败（不影响二进制上传与提审）：#{ex.message}")
+    end
   end
 
   desc "Build from source (Xcode project) then upload & submit"
