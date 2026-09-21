@@ -78,7 +78,7 @@ platform :ios do
       api_key: api_key,
       app_identifier: "com.mmhua.com",
       team_id: "S88VU4PBFB",
-      build_number: ENV["APP_BUILD_NUMBER"] || "4",  # 已上传的构建号，提交它而非重传
+      build_number: ENV["APP_BUILD_NUMBER"] || "5",  # 已上传的构建号，提交它而非重传
       skip_binary_upload: true,     # 不重传二进制，只提交已上传的构建
       skip_metadata: true,
       skip_screenshots: true,
@@ -126,7 +126,7 @@ platform :ios do
       api_key: api_key,
       app_identifier: "com.mmhua.com",
       team_id: "S88VU4PBFB",
-      build_number: ENV["APP_BUILD_NUMBER"] || "3",  # 已上传的构建号（当前为 3）
+      build_number: ENV["APP_BUILD_NUMBER"] || "5",  # 已上传的构建号（当前为 5）
       skip_binary_upload: true,     # 不重传二进制，只补资料 + 重提
       skip_metadata: true,
       skip_screenshots: true,

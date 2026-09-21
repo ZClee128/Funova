@@ -16,6 +16,10 @@ on:
 jobs:
   submit:
     runs-on: macos-latest
+    env:
+      # 被拒后“自动回复”所需的文案与录屏附件（放在仓库根目录）
+      APP_REVIEW_NOTES_FILE: APP_REVIEW_NOTES.txt
+      APP_REVIEW_ATTACHMENT: app_review_recording.mp4
     steps:
       - name: Checkout
         uses: actions/checkout@v4
