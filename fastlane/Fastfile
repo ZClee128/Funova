@@ -76,6 +76,61 @@ platform :ios do
     )
   end
 
+  # =========================================================
+  # 方式 A3：被拒后补资料重提（Guideline 2.1 等“需补充信息”类）
+  # 不重传二进制，只把“审核备注 + 录屏附件”提交并重新提审。
+  # 用法（本地或 Actions 手动触发）：
+  #   APP_REVIEW_NOTES_FILE=APP_REVIEW_NOTES.txt APP_REVIEW_ATTACHMENT=/path/to/recording.mov fastlane ios resubmit_with_info
+  # 说明：
+  #   - notes 从 APP_REVIEW_NOTES_FILE 读取（纯文本，会贴进 App Review Information 的 Notes）
+  #   - 录屏附件从 APP_REVIEW_ATTACHMENT 读取（.mov/.mp4，作为 App Review Attachment 给审核员看）
+  #   - 若附件路径为空，则只提交文字备注、不附视频
+  # =========================================================
+  desc "Resubmit an already-uploaded build with App Review notes + screen-recording attachment"
+  lane :resubmit_with_info do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APPSTORE_CONNECT_API_KEY_KEY_ID"],
+      issuer_id: ENV["APPSTORE_CONNECT_API_KEY_ISSUER_ID"],
+      key_content: ENV["APPSTORE_CONNECT_API_KEY_P8"],
+      duration: 1200,
+      in_house: false
+    )
+
+    notes = nil
+    notes_file = ENV["APP_REVIEW_NOTES_FILE"]
+    if notes_file && File.exist?(notes_file)
+      notes = File.read(notes_file).strip
+    end
+
+    attachment = ENV["APP_REVIEW_ATTACHMENT"]
+    attachment = nil unless attachment && File.exist?(attachment)
+
+    deliver(
+      api_key: api_key,
+      app_identifier: "com.mmhua.com",
+      team_id: "S88VU4PBFB",
+      build_number: ENV["APP_BUILD_NUMBER"] || "3",  # 已上传的构建号（当前为 3）
+      skip_binary_upload: true,     # 不重传二进制，只补资料 + 重提
+      skip_metadata: true,
+      skip_screenshots: true,
+      submit_for_review: true,
+      automatic_release: false,
+      precheck_include_in_app_purchases: false,
+      # 审核备注（贴进 App Review Information → Notes）
+      app_review_information: {
+        notes: notes,
+        demo_account_required: false
+      },
+      # 录屏附件（App Review Attachment，审核员可见）
+      app_review_attachment_file: attachment,
+      # 出口合规声明
+      submission_information: {
+        export_compliance_uses_encryption: false
+      },
+      force: true
+    )
+  end
+
   desc "Build from source (Xcode project) then upload & submit"
   lane :build_and_upload do
     api_key = app_store_connect_api_key(

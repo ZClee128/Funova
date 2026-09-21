@@ -1,0 +1,17 @@
+1. Screen recording
+A screen recording captured on a physical iPhone running the latest iOS is attached to this submission. It demonstrates the complete user flow: launching the app, tapping to access the device Photo Library, selecting a video, previewing and editing it on-device, and saving the edited video back to the Photo Library. The app requires no account registration or login, so the full flow is shown from a cold launch.
+
+2. App purpose and target audience
+Funova is a lightweight, on-device video editing and preview tool for iPhone. It lets users open videos stored in their Photo Library, preview and edit them locally on the device, and save the finished video back to the Photo Library. It solves the need for quick, private, no-account video trimming and preview without uploading anything to a server. Target audience: general iPhone users who want simple local video editing.
+
+3. Setup and access instructions
+No registration or login is required. All features are available immediately after launching the app. On first launch the app requests Photo Library access; grant it to load videos. Main flow: open the app, select a video from the Photo Library, preview and edit on device, then tap save to write the result back to the Photo Library. No demo account, credentials, or sample files are needed. [If the app actually has login or a backend account, provide the credentials here.]
+
+4. External services, tools, or platforms
+The app operates fully on-device. It only reads from and writes to the device Photo Library using standard iOS system frameworks. No third-party analytics, advertising, authentication, or payment SDKs are bundled (verified: the app contains 0 embedded third-party frameworks). [If the app actually connects to any server or third-party service, such as upload, AI, or login, describe the domain and purpose here.]
+
+5. Regional differences
+The app functions consistently across all regions. There are no region-specific features, content, or restrictions.
+
+6. Regulated industry / protected material
+Not applicable. The app is not in a highly regulated industry and does not include protected third-party material.

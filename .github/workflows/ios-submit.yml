@@ -14,6 +14,7 @@ on:
         options:
           - upload_ipa
           - submit_existing_build
+          - resubmit_with_info
 
 jobs:
   submit:
