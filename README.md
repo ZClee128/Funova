@@ -10,7 +10,7 @@
 
 | 项目 | 结论 |
 |------|------|
-| IPA 文件 | `FunovaiOSreview-20260920.ipa`（约 8.8MB），bundle id `com.mmhua.com`，显示名 `Funova`，可执行名 `Pro91` |
+| IPA 文件 | `FunovaiOSreview-20260921.ipa`（约 8.4MB），bundle id `com.mmhua.com`，显示名 `Funova`，可执行名 `Pro91` |
 | IPA 签名类型 | **App Store 分发型**（内嵌 profile：`get-task-allow=false`、无设备列表、团队 `Pham Thi Nhung` / `S88VU4PBFB`、有效期至 2027-08-31）→ **可直接上传，无需重签** |
 | 配置描述文件 | `mm.mobileprovision`：分发型，app id `S88VU4PBFB.com.mmhua.com`，与 IPA 一致 |
 | 源码 | **无 Xcode 工程**，仅有编译好的 IPA → 当前只能"上传现成 IPA"，无法"从源码打包" |
@@ -20,7 +20,9 @@
 
 ## 二、两种提交方式（见 `fastlane/Fastfile`）
 
-- **方式 A `upload_ipa`（默认，当前可用）**：直接上传仓库里的 `FunovaiOSreview-20260920.ipa`。注意：该 IPA 的构建号（CFBundleVersion）写死，**每个构建号在 App Store Connect 只能上传一次**。首次成功上传后，再传同一构建号会被拒（`bundle version must be higher than the previously uploaded version`）。当前包构建号 `3`、版本 `0.1.13`。
+- **方式 A `upload_ipa`（默认，当前可用）**：直接上传仓库里的 `FunovaiOSreview-20260921.ipa`，并**自动带上审核回复文案（APP_REVIEW_NOTES.txt）+ 可选录屏附件 + 自动提审**。注意：该 IPA 的构建号（CFBundleVersion）写死，**每个构建号在 App Store Connect 只能上传一次**。当前包构建号 `4`、版本 `0.1.13`。
+  - 录屏附件：设置环境变量 `APP_REVIEW_ATTACHMENT=/path/to/recording.mov` 即作为 App Review Attachment 自动上传；留空则不附视频。
+  - 文案路径：默认读仓库内 `APP_REVIEW_NOTES.txt`，可用 `APP_REVIEW_NOTES_FILE` 覆盖。
 - **方式 A2 `submit_existing_build`**：IPA 已上传过时，直接提交已上传的构建（默认构建号 `1`）去审核，**不再重传二进制**。工作流支持手动选择 lane 触发（`workflow_dispatch` → lane=`submit_existing_build`）。
 - **方式 B `build_and_upload`（有源码后）**：把 Xcode 工程加进仓库，改为 `gym` 从源码打包再上传（需在 Secrets 里配好分发证书与 profile，才能重签新构建号）。
 
@@ -82,7 +84,7 @@ GitHub Actions 工作流默认跑方式 A（`.github/workflows/ios-submit.yml`�
 
 ```
 .
-├── FunovaiOSreview-20260920.ipa      # 待提审的安装包（已分发签名，构建号 3 / 版本 0.1.13）
+├── FunovaiOSreview-20260921.ipa      # 待提审的安装包（已分发签名，构建号 4 / 版本 0.1.13）
 ├── mm.mobileprovision             # 分发型描述文件
 ├── 开发证书.p12                   # 开发证书（不提交，直接上传用不到）
 ├── Gemfile                        # fastlane 依赖

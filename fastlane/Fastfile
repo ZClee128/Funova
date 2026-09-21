@@ -18,17 +18,34 @@ platform :ios do
       in_house: false
     )
 
+    # 审核回复文案（贴进 App Review Information → Notes），用于 Guideline 2.1 等“需补资料”场景
+    notes = nil
+    notes_file = ENV["APP_REVIEW_NOTES_FILE"] || "APP_REVIEW_NOTES.txt"
+    if File.exist?(notes_file)
+      notes = File.read(notes_file).strip
+    end
+    # 录屏附件（App Review Attachment，审核员可见）；留空则不附视频
+    attachment = ENV["APP_REVIEW_ATTACHMENT"]
+    attachment = nil unless attachment && File.exist?(attachment)
+
     deliver(
       api_key: api_key,
       app_identifier: "com.mmhua.com",
       team_id: "S88VU4PBFB",
-      ipa: "FunovaiOSreview-20260920.ipa",
+      ipa: "FunovaiOSreview-20260921.ipa",
       skip_metadata: true,     # 元数据（名称/描述/截图等）需先在 App Store Connect 后台填好
       skip_screenshots: true,
       submit_for_review: true, # 上传后直接提审；若后台元数据不齐会失败，属正常校验
       automatic_release: false,
       # API Key 认证暂不支持内购预检，必须显式关闭，否则 deliver 直接报错
       precheck_include_in_app_purchases: false,
+      # 审核回复备注（被拒后补资料用）
+      app_review_information: {
+        notes: notes,
+        demo_account_required: false
+      },
+      # 录屏附件（可选；提供后作为 App Review Attachment 给审核员看）
+      app_review_attachment_file: attachment,
       # 出口合规声明：标准 App（仅用 HTTPS 等常规加密，属豁免类）填 false
       submission_information: {
         export_compliance_uses_encryption: false
@@ -61,7 +78,7 @@ platform :ios do
       api_key: api_key,
       app_identifier: "com.mmhua.com",
       team_id: "S88VU4PBFB",
-      build_number: ENV["APP_BUILD_NUMBER"] || "3",  # 已上传的构建号，提交它而非重传
+      build_number: ENV["APP_BUILD_NUMBER"] || "4",  # 已上传的构建号，提交它而非重传
       skip_binary_upload: true,     # 不重传二进制，只提交已上传的构建
       skip_metadata: true,
       skip_screenshots: true,
