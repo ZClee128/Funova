@@ -7,8 +7,8 @@ To clarify: we do not have, and do not claim, any rights to, affiliation with, o
 To resolve this, we have:
 
 1. Removed all references to "Funova" from the app's metadata — including the app name, subtitle, description, keywords, and screenshots.
-2. Renamed the app to Paybox Big. The submitted build (version 0.1.13, build 6) uses the new app name and contains no "Funova" references.
-3. We have selected a new app name as our own product branding, removed all prior third-party references, and are not claiming any rights to or affiliation with any other brand.
+2. Renamed the app to Snipra. The submitted build (version 0.1.13, build 6) uses the new app name and contains no "Funova" references.
+3. The new name "Snipra" is an original brand name we created for this app; it does not reference or incorporate any third-party trademark or brand.
 
 We have resubmitted the updated build for your review. Please let us know if any further information is needed.
 

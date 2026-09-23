@@ -35,7 +35,7 @@ platform :ios do
       api_key: api_key,
       app_identifier: "com.mmhua.com",
       team_id: "S88VU4PBFB",
-      ipa: "PayboxBig-iOSreview-20260921.ipa",
+      ipa: "Snipra-iOSreview-20260921.ipa",
       skip_metadata: true,     # 元数据（名称/描述/截图等）需先在 App Store Connect 后台填好
       skip_screenshots: true,
       submit_for_review: true, # 上传后直接提审；若后台元数据不齐会失败，属正常校验
