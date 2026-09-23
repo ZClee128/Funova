@@ -10,7 +10,7 @@
 
 | 项目 | 结论 |
 |------|------|
-| IPA 文件 | `Snipra-iOSreview-20260921.ipa`（约 8.4MB），bundle id `com.mmhua.com`，显示名 `Snipra`，可执行名 `Snipra`（名称一致） |
+| IPA 文件 | `SnipraiOS20260923.ipa`（约 8.4MB），bundle id `com.mmhua.com`，显示名 `Snipra`，可执行名 `Snipra`（名称一致） |
 | IPA 签名类型 | **App Store 分发型**（内嵌 profile：`get-task-allow=false`、无设备列表、团队 `Pham Thi Nhung` / `S88VU4PBFB`、有效期至 2027-08-31）→ **可直接上传，无需重签** |
 | 配置描述文件 | `mm.mobileprovision`：分发型，app id `S88VU4PBFB.com.mmhua.com`，与 IPA 一致 |
 | 源码 | **无 Xcode 工程**，仅有编译好的 IPA → 当前只能"上传现成 IPA"，无法"从源码打包" |
@@ -24,7 +24,7 @@
 
 ## 二、两种提交方式（见 `fastlane/Fastfile`）
 
-- **方式 A `upload_ipa`（默认，当前可用）**：直接上传仓库里的 `Snipra-iOSreview-20260921.ipa`，并**自动带上审核回复文案（APP_REVIEW_NOTES_4.1a.txt，即 4.1(a) 改名回复）+ 自动提审**。注意：该 IPA 的构建号（CFBundleVersion）写死，**每个构建号在 App Store Connect 只能上传一次**。当前包构建号 `6`、版本 `0.1.13`（已按 4.1(a) 改名路线从 Funova 改为 Snipra）。
+- **方式 A `upload_ipa`（默认，当前可用）**：直接上传仓库里的 `SnipraiOS20260923.ipa`，并**自动带上审核回复文案（APP_REVIEW_NOTES_4.1a.txt，即 4.1(a) 改名回复）+ 自动提审**。注意：该 IPA 的构建号（CFBundleVersion）写死，**每个构建号在 App Store Connect 只能上传一次**。当前包构建号 `6`、版本 `0.1.13`（已按 4.1(a) 改名路线从 Funova 改为 Snipra）。
   - ⚠️ 关键修复：fastlane 的 `deliver` 在 `skip_metadata: true` 时会直接 `return`，**不会**写入审核备注/附件。因此回复文案改由独立的 `apply_review_info` lane 通过 App Store Connect API 直接写入 **App Review Information**，且必须在 `deliver`（含 `submit_for_review`）之前调用，确保提审时审核员能看到。
   - 录屏附件（App Review Attachment）为**可选项**，苹果不强制：本次未附录屏，只提交文字回复。工作流已移除 `APP_REVIEW_ATTACHMENT` 引用；以后要有录屏，把 `app_review_recording.mp4` 放回仓库根并取消工作流里该 env 注释即可自动附上。
   - 文案路径：工作流已固定读仓库内 `APP_REVIEW_NOTES_4.1a.txt`（4.1(a) 改名回复），可用 `APP_REVIEW_NOTES_FILE` 覆盖。
@@ -73,7 +73,7 @@ GitHub Actions 工作流**仅手动触发**（`workflow_dispatch`），默认跑
 > 前提：App Store Connect 后台该版本的**元数据（名称/描述/截图/分级等）已填写完整**，否则提审会失败（属正常校验）。改名后需在后台把名称/副标题/描述/关键词/截图里的 "Funova" 全部改成 **Snipra**。
 
 ### 换包 / 更新录屏时
-- **换 IPA**：把新包命名为 `Snipra-iOSreview-20260921.ipa` 覆盖原文件（构建号必须 > 已上传的最高值，当前用 6），再手动触发 `upload_ipa`。
+- **换 IPA**：把新包命名为 `SnipraiOS20260923.ipa` 覆盖原文件（构建号必须 > 已上传的最高值，当前用 6），再手动触发 `upload_ipa`。
 - **只换录屏**：直接替换 `app_review_recording.mp4`，再触发 `resubmit_with_info`（不重传二进制）。
 - **只改回复文案**：编辑 `APP_REVIEW_NOTES_4.1a.txt` 后重新触发对应 lane。
 
@@ -102,7 +102,7 @@ GitHub Actions 工作流**仅手动触发**（`workflow_dispatch`），默认跑
 
 ```
 .
-├── Snipra-iOSreview-20260921.ipa      # 待提审的安装包（已分发签名，构建号 6 / 版本 0.1.13，已从 Funova 改名）
+├── SnipraiOS20260923.ipa      # 待提审的安装包（已分发签名，构建号 6 / 版本 0.1.13，已从 Funova 改名）
 ├── app_review_recording.mp4         # 审核录屏附件（可选；本次未附，已从工作流 env 移除引用）
 ├── APP_REVIEW_NOTES_4.1a.txt        # 4.1(a) 改名回复文案（工作流默认读取）
 ├── APP_REVIEW_RESPONSE_4.1a.md      # 同一份文案的 Markdown 版（含新名说明）
