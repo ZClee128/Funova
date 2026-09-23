@@ -1,0 +1,15 @@
+Hello App Review Team,
+
+Thank you for the feedback regarding Guideline 4.1(a).
+
+To clarify: we do not have, and do not claim, any rights to, affiliation with, or authorization from the third-party "Funova" brand. We apologize for the confusing metadata.
+
+To resolve this, we have:
+
+1. Removed all references to "Funova" from the app's metadata — including the app name, subtitle, description, keywords, and screenshots.
+2. Renamed the app to Paybox Big. The submitted build (version 0.1.13, build 6) uses the new app name and contains no "Funova" references.
+3. We have selected a new app name as our own product branding, removed all prior third-party references, and are not claiming any rights to or affiliation with any other brand.
+
+We have resubmitted the updated build for your review. Please let us know if any further information is needed.
+
+Thank you.

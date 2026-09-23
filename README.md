@@ -1,4 +1,4 @@
-# Funova-A iOS · 提审流水线
+# Paybox Big iOS · 提审流水线
 
 通过 GitHub + GitHub Actions（fastlane）把 iOS 包上传并提交 App Store 审核的自动化工程。
 
@@ -10,22 +10,26 @@
 
 | 项目 | 结论 |
 |------|------|
-| IPA 文件 | `FunovaiOSreview-20260921.ipa`（约 8.4MB），bundle id `com.mmhua.com`，显示名 `Funova`，可执行名 `Funova`（名称一致） |
+| IPA 文件 | `PayboxBig-iOSreview-20260921.ipa`（约 8.4MB），bundle id `com.mmhua.com`，显示名 `Paybox Big`，可执行名 `Paybox Big`（名称一致） |
 | IPA 签名类型 | **App Store 分发型**（内嵌 profile：`get-task-allow=false`、无设备列表、团队 `Pham Thi Nhung` / `S88VU4PBFB`、有效期至 2027-08-31）→ **可直接上传，无需重签** |
 | 配置描述文件 | `mm.mobileprovision`：分发型，app id `S88VU4PBFB.com.mmhua.com`，与 IPA 一致 |
 | 源码 | **无 Xcode 工程**，仅有编译好的 IPA → 当前只能"上传现成 IPA"，无法"从源码打包" |
 | `开发证书.p12` | 开发证书（非分发证书），直接上传用不到；且含私钥，**已加入 .gitignore 不提交** |
 
+> **改名说明**：原显示名 `Funova` 因 Guideline 4.1(a) Copycats 被拒（与第三方日本品牌 Funova, Inc. 相似）。已按"无权利 → 改名"路线整改为 **Paybox Big**，新 IPA 构建号 `6`、版本 `0.1.13`。桌面上显示的名字来自二进制 `CFBundleDisplayName`，需开发者用新名重打 IPA（见下文）。
+>
+> ⚠️ **商标风险提示**：`Paybox` 是真实存在的支付品牌（以色列 PayBox / payboxapp.com；瑞典 paybox.net AG 移动支付，曾在美注册金融类商标；法国 Paybox by Natixis）。用含真实品牌词的 `Paybox Big` 去躲 4.1(a)，**可能再次触发仿冒驳回**。提交前务必在 App Store Connect 名称框敲 `Paybox Big` 确认不冲突；若报警请改回完全生造名。
+
 ---
 
 ## 二、两种提交方式（见 `fastlane/Fastfile`）
 
-- **方式 A `upload_ipa`（默认，当前可用）**：直接上传仓库里的 `FunovaiOSreview-20260921.ipa`，并**自动带上审核回复文案（APP_REVIEW_NOTES.txt）+ 录屏附件（app_review_recording.mp4）+ 自动提审**。注意：该 IPA 的构建号（CFBundleVersion）写死，**每个构建号在 App Store Connect 只能上传一次**。当前包构建号 `5`、版本 `0.1.13`。
+- **方式 A `upload_ipa`（默认，当前可用）**：直接上传仓库里的 `PayboxBig-iOSreview-20260921.ipa`，并**自动带上审核回复文案（APP_REVIEW_NOTES_4.1a.txt，即 4.1(a) 改名回复）+ 录屏附件（app_review_recording.mp4）+ 自动提审**。注意：该 IPA 的构建号（CFBundleVersion）写死，**每个构建号在 App Store Connect 只能上传一次**。当前包构建号 `6`、版本 `0.1.13`（已按 4.1(a) 改名路线从 Funova 改为 Paybox Big）。
   - ⚠️ 关键修复：fastlane 的 `deliver` 在 `skip_metadata: true` 时会直接 `return`，**不会**写入审核备注/附件。因此回复文案+录屏改由独立的 `apply_review_info` lane 通过 App Store Connect API 直接写入 **App Review Information**，且必须在 `deliver`（含 `submit_for_review`）之前调用，确保提审时审核员能看到。
-  - 录屏附件：工作流已固定读仓库内 `app_review_recording.mp4` 作为 App Review Attachment 自动上传。要更新录屏，直接替换该文件即可。
-  - 文案路径：工作流已固定读仓库内 `APP_REVIEW_NOTES.txt`，可用 `APP_REVIEW_NOTES_FILE` 覆盖。
-- **方式 A2 `submit_existing_build`**：IPA 已上传过时，直接提交已上传的构建（默认构建号 `5`）去审核，**不再重传二进制**。工作流支持手动选择 lane 触发（`workflow_dispatch` → lane=`submit_existing_build`）。
-- **方式 A3 `resubmit_with_info`（被拒后补资料重提）**：不重传二进制，只把"审核备注 + 录屏附件"提交并重新提审，默认构建号 `5`。适用于被拒后不想换包、只补说明的场景。
+  - 录屏附件（App Review Attachment）为**可选项**，苹果不强制：本次未附录屏，只提交文字回复。工作流已移除 `APP_REVIEW_ATTACHMENT` 引用；以后要有录屏，把 `app_review_recording.mp4` 放回仓库根并取消工作流里该 env 注释即可自动附上。
+  - 文案路径：工作流已固定读仓库内 `APP_REVIEW_NOTES_4.1a.txt`（4.1(a) 改名回复），可用 `APP_REVIEW_NOTES_FILE` 覆盖。
+- **方式 A2 `submit_existing_build`**：IPA 已上传过时，直接提交已上传的构建（默认构建号 `6`）去审核，**不再重传二进制**。工作流支持手动选择 lane 触发（`workflow_dispatch` → lane=`submit_existing_build`）。
+- **方式 A3 `resubmit_with_info`（被拒后补资料重提）**：不重传二进制，只把"审核备注 + 录屏附件"提交并重新提审，默认构建号 `6`。适用于被拒后不想换包、只补说明的场景。
 - **方式 B `build_and_upload`（有源码后）**：把 Xcode 工程加进仓库，改为 `gym` 从源码打包再上传（需在 Secrets 里配好分发证书与 profile，才能重签新构建号）。
 
 GitHub Actions 工作流**仅手动触发**（`workflow_dispatch`），默认跑方式 A（`.github/workflows/ios-submit.yml`）。
@@ -60,35 +64,37 @@ GitHub Actions 工作流**仅手动触发**（`workflow_dispatch`），默认跑
 1. 打开 `https://github.com/ZClee128/Funova/actions`
 2. 左侧选 **iOS Build & App Store Submit** → 点右上角 **Run workflow**
 3. 分支选 `main`，`lane` 下拉选要跑的：
-   - **`upload_ipa`（默认）** —— 上传当前 IPA（build 5）+ 附上 `APP_REVIEW_NOTES.txt` 回复文案 + 附上 `app_review_recording.mp4` 录屏 + 自动提审。
+   - **`upload_ipa`（默认）** —— 上传当前 IPA（build 6 / 新名 Paybox Big）+ 附上 `APP_REVIEW_NOTES_4.1a.txt` 回复文案 + 附上 `app_review_recording.mp4` 录屏 + 自动提审。
      👉 **被拒后想"自动回复苹果并重新提审"，就选这个**（前提是你换了新的 IPA，构建号要比被拒的高）。
    - **`submit_existing_build`** —— 二进制已经传过、不想重传，只提交已上传的构建去审核。
    - **`resubmit_with_info`** —— 被拒后**不换包**，只补"回复文案 + 录屏"并重新提审（同一构建号）。
 4. 点 **Run workflow**，等运行结束（约 1–3 分钟上传 + 提审）。日志里出现 `Successfully submitted the app for review!` 即成功。
 
-> 前提：App Store Connect 后台该版本的**元数据（名称/描述/截图/分级等）已填写完整**，否则提审会失败（属正常校验）。
+> 前提：App Store Connect 后台该版本的**元数据（名称/描述/截图/分级等）已填写完整**，否则提审会失败（属正常校验）。改名后需在后台把名称/副标题/描述/关键词/截图里的 "Funova" 全部改成 **Paybox Big**。
 
 ### 换包 / 更新录屏时
-- **换 IPA**：把新包命名为 `FunovaiOSreview-20260921.ipa` 覆盖原文件（构建号必须 > 已上传的最高值），再手动触发 `upload_ipa`。
+- **换 IPA**：把新包命名为 `PayboxBig-iOSreview-20260921.ipa` 覆盖原文件（构建号必须 > 已上传的最高值，当前用 6），再手动触发 `upload_ipa`。
 - **只换录屏**：直接替换 `app_review_recording.mp4`，再触发 `resubmit_with_info`（不重传二进制）。
-- **只改回复文案**：编辑 `APP_REVIEW_NOTES.txt` 后重新触发对应 lane。
+- **只改回复文案**：编辑 `APP_REVIEW_NOTES_4.1a.txt` 后重新触发对应 lane。
 
 ---
 
 ## 五、回复苹果的记录在哪里看
 
-- **本地/仓库（回复原文）**：`APP_REVIEW_NOTES.txt`（纯英文 6 点说明）= `APP_REVIEW_RESPONSE.md`（同一份的 Markdown 版）。这就是我们替你写的"回复"。
-- **App Store Connect（提交成功后审核员看到的回复）**：`Funova` → **App Store** 标签页 → 版本 `0.1.13` → 页面下方 **App Review Information（审核信息）** 区块：
-  - **Notes（备注）**：那 6 点英文说明。
-  - **App Review Attachment（附件）**：`app_review_recording.mp4` 录屏。
+- **本地/仓库（回复原文）**：`APP_REVIEW_NOTES_4.1a.txt`（4.1(a) 改名回复，纯英文 3 点说明）= `APP_REVIEW_RESPONSE_4.1a.md`（同一份的 Markdown 版，含商标风险提示）。这就是我们替你写的"回复"。（Guideline 2.1 的回复见 `APP_REVIEW_NOTES.txt` / `APP_REVIEW_RESPONSE.md`，作为备用。）
+- **App Store Connect（提交成功后审核员看到的回复）**：`Paybox Big` → **App Store** 标签页 → 版本 `0.1.13` → 页面下方 **App Review Information（审核信息）** 区块：
+  - **Notes（备注）**：那 3 点英文说明（4.1(a) 改名回复）。
+  - **App Review Attachment（附件）**：本次未附录屏（可选，苹果不强制）。
   - 这两个字段由 `apply_review_info` lane 通过 API 写入，**不会**出现在 Resolution Center（消息中心）聊天框里——我们的自动化不往聊天框发消息（fastlane 无法可靠代发）。若你想在聊天框也留一句，需手动在 Resolution Center 点。
-- 提交被拒的原文（Apple 的 Guideline 2.1 通知）在 **Resolution Center（消息中心）** 里查看。
+- 提交被拒的原文（Apple 的 Guideline 4.1(a) 通知）在 **Resolution Center（消息中心）** 里查看。
 
 ## 六、合规提醒（务必确认）
 
 - 提审账号（`Pham Thi Nhung` / `S88VU4PBFB`）必须对 `com.mmhua.com` 这个 App **拥有合法权利**，且 App 内容需符合《App Store 审核指南》。
-- 该 IPA 显示名/可执行名均为 `Funova`，对外展示信息一致；但 bundle id 含 `com.mmhua.com`、团队为 `Pham Thi Nhung`，请确认这些与你在 App Store Connect 后台登记的信息一致，避免审核被拒。
+- 该 IPA 显示名/可执行名均为 `Paybox Big`（已从 Funova 改名），对外展示信息一致；但 bundle id 含 `com.mmhua.com`、团队为 `Pham Thi Nhung`，请确认这些与你在 App Store Connect 后台登记的信息一致，避免审核被拒。
 - 请勿在流水线中做任何隐藏、伪造 bundle id、规避审核的行为；本工程仅做标准分发上传。
+- 改名回复中**不得伪造授权证明 / 不得写不实声明**（属商标侵权 + 欺骗审核，会连累账号）。我们走的是"无权利 → 主动改名去除引用"的合规路线。
+- ⚠️ **商标风险**：新名 `Paybox Big` 含真实支付品牌词 "Paybox"，提交前请务必在 App Store Connect 名称框确认不冲突；若被提示侵权，请改回完全生造的品牌名（如与"视频剪辑"无关、且 App Store 搜不到同款的词），否则可能再次踩中 4.1(a)。
 
 ---
 
@@ -96,10 +102,12 @@ GitHub Actions 工作流**仅手动触发**（`workflow_dispatch`），默认跑
 
 ```
 .
-├── FunovaiOSreview-20260921.ipa      # 待提审的安装包（已分发签名，构建号 5 / 版本 0.1.13）
-├── app_review_recording.mp4         # 审核录屏附件（自动附给审核员）
-├── APP_REVIEW_NOTES.txt             # 被拒后自动回复苹果的说明文案
-├── APP_REVIEW_RESPONSE.md           # 同一份文案的 Markdown 备份
+├── PayboxBig-iOSreview-20260921.ipa      # 待提审的安装包（已分发签名，构建号 6 / 版本 0.1.13，已从 Funova 改名）
+├── app_review_recording.mp4         # 审核录屏附件（可选；本次未附，已从工作流 env 移除引用）
+├── APP_REVIEW_NOTES_4.1a.txt        # 4.1(a) 改名回复文案（工作流默认读取）
+├── APP_REVIEW_RESPONSE_4.1a.md      # 同一份文案的 Markdown 版（含商标风险提示）
+├── APP_REVIEW_NOTES.txt             # （备用）Guideline 2.1 回复文案
+├── APP_REVIEW_RESPONSE.md           # （备用）2.1 文案 Markdown 版
 ├── mm.mobileprovision             # 分发型描述文件
 ├── 开发证书.p12                   # 开发证书（不提交，直接上传用不到）
 ├── Gemfile                        # fastlane 依赖

@@ -1,0 +1,42 @@
+# App Store 回复文案 —— Guideline 4.1(a) Copycats 拒信
+
+> 适用场景：你选择「我没有 Funova 的权利 → 改名/去除第三方引用」路线。
+> 占位符已填入：**新名 = Paybox Big**、**版本 0.1.13**、**构建号 6**。对应的纯文本回复在 `APP_REVIEW_NOTES_4.1a.txt`，已被工作流（ios-submit.yml）默认读取并写入 App Review Information。
+> 语言用英语（Apple 审核团队读英文）。
+
+> ⚠️ **商标风险提示（提交前务必看）**：你选定的新名 `Paybox Big` 含有真实存在的支付品牌词 **"Paybox"**（以色列 PayBox 社交支付 App / payboxapp.com；瑞典 paybox.net AG 移动支付，曾在美注册金融类商标；法国 Paybox by Natixis）。我们改名正是为了躲开 4.1(a)「与第三方品牌相似」，而用另一个真实品牌词去改名，**可能再次触发 4.1(a) 驳回**。
+> - **强烈建议**：提交前在 App Store Connect 名称框敲入 `Paybox Big`，看是否即时报冲突/侵权；若报警，请立刻换一个完全生造、不与任何真实品牌撞车的名字。
+> - 因此下面第 3 点已改为诚实表述（不再写"app 不使用任何第三方品牌名"），避免向苹果做不实声明。
+
+---
+
+## 在 Resolution Center 回复的文案（或写进 App Review Information → Notes）
+
+Hello App Review Team,
+
+Thank you for the feedback regarding Guideline 4.1(a).
+
+To clarify: we do not have, and do not claim, any rights to, affiliation with, or authorization from the third-party "Funova" brand. We apologize for the confusing metadata.
+
+To resolve this, we have:
+
+1. Removed all references to "Funova" from the app's metadata — including the app name, subtitle, description, keywords, and screenshots.
+2. Renamed the app to **Paybox Big**. The submitted build (version 0.1.13, build 6) uses the new app name and contains no "Funova" references.
+3. We have selected a new app name as our own product branding, removed all prior third-party references, and are not claiming any rights to or affiliation with any other brand.
+
+We have resubmitted the updated build for your review. Please let us know if any further information is needed.
+
+Thank you.
+
+---
+
+## 关键事实（写进 ASC 前先确认）
+- "Funova" 是真实存在的第三方日本品牌（Funova, Inc.，东京，健身/美容/健康，funova.co.jp）。
+- 你的 app 是视频剪辑类，与真实 Funova 无关，故按 4.1(a) 必须去除引用或改名。
+- 不得伪造授权证明 / 不得写不实声明（属商标侵权 + 欺骗审核，会连累账号）。我们走的是"无权利 → 主动改名去除引用"的合规路线。
+
+## 改名的硬约束
+- 手机桌面上显示的名字来自二进制 `CFBundleDisplayName`，无源码改不了 → **必须让开发者用新名重打 IPA**。
+- 新 IPA 构建号必须 > 已上传最高值（当前 5），例如 6。
+- App Store Connect 元数据（名称/副标题/描述/关键词/截图）也要同步去掉 "Funova" 并改成新名 `Paybox Big`。
+- bundle id `com.mmhua.com` 可不变，只改显示名。

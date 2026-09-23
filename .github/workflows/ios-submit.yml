@@ -17,9 +17,11 @@ jobs:
   submit:
     runs-on: macos-latest
     env:
-      # 被拒后“自动回复”所需的文案与录屏附件（放在仓库根目录）
-      APP_REVIEW_NOTES_FILE: APP_REVIEW_NOTES.txt
-      APP_REVIEW_ATTACHMENT: app_review_recording.mp4
+      # 被拒后“自动回复”所需的文案（放在仓库根目录）
+      APP_REVIEW_NOTES_FILE: APP_REVIEW_NOTES_4.1a.txt
+      # 录屏附件（App Review Attachment）为可选项，苹果不强制：
+      # 有录屏时把文件放到仓库根并取消下面注释即可自动附上；留空则只提交文字回复。
+      # APP_REVIEW_ATTACHMENT: app_review_recording.mp4
     steps:
       - name: Checkout
         uses: actions/checkout@v4
