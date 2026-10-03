@@ -1,0 +1,19 @@
+【后台操作说明】
+把下面这 3 行英文加进 App Store Connect → 你的 App → App Store（App Description / 描述）区域。
+目的：让「后台描述」与「提交给审核员的 App Review Notes」功能清单完全一致。
+2.3.1 审的是**描述与实际是否一致**，两边只写一边都会被判定为不准确。
+
+粘贴进 App Description 的英文（直接复制）：
+
+- Speed control: adjust the playback speed of a clip to make it play faster or slower.
+- Filters and color adjustment: apply a filter to the video and adjust its brightness and contrast.
+- Aspect ratio / output canvas: choose the aspect ratio of the video canvas for the edited result.
+
+粘贴后自检（3 条都要满足）：
+1. 后台描述里出现了上面 3 项 → 与备注一致 ✅
+2. 后台描述里**没有提到**上面 3 项以外的编辑功能（比如文字、音乐、贴纸、转场、裁剪画面）→ 否则备注说"没有其它编辑功能"就不实了 ❌
+3. App 名称、截图里展示的功能也只这 3 类（截图如果展示的是别的按钮，要在提审前换掉，审核员会对照截图核）
+
+注意：App Description 在「待审核状态」下也可以编辑（走 App Store 侧的编辑流程），
+但如果该版本已经挂在 Waiting for Review / In Review，改动会提示需要重新提交，
+这种情况先别改、先把这版提完，下一版再补。

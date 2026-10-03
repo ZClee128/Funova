@@ -20,8 +20,17 @@ WHAT SNIPRA DOES (all accessible from the home screen)
 2. Edit the video (see the edit operations listed below).
 3. Export/save the finished video back to the Photos library.
 
--- Please replace the line above with the app's actual edit operations, e.g.:
-   trim, crop, rotate, speed, filters, text, music, etc. (list each one). --
+The editing operations available in Snipra are the following (all performed
+on-device, none of them downloads or installs anything):
+
+- Speed control: change the playback speed of a clip, making it play faster
+  or slower.
+- Filters and color adjustment: apply a filter to the video, and adjust its
+  brightness and contrast.
+- Aspect ratio / output canvas: choose the aspect ratio of the video canvas
+  used for the edited result.
+
+There are no other editing operations in the app.
 
 The app's scope and behavior:
 - All processing is performed on-device. There is no server, no remote
