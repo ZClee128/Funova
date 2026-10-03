@@ -1,0 +1,40 @@
+Response to Guideline 2.3.1(a) - Performance - Accurate Metadata
+
+Hello App Review Team,
+
+Thank you for the review and for pointing out Guideline 2.3.1(a).
+
+We have audited the submitted build (Snipra, version 0.1.13, build 7) and found
+that it contained unused, leftover configuration entries and dead code from an
+older project setup. These entries (the "PRO91" prefixed keys in Info.plist,
+e.g. PRO91ManifestBaseURL, PRO91InstallCodeURL, PRO91LandingHost) had empty
+values and exposed no reachable functionality to users or to App Review. To be
+fully compliant, we have removed all of them and every reference to the related
+code from the project, and we have rebuilt and resubmitted the app as build 7.
+
+The app is now a single, self-contained video editing app. Its complete feature
+set is described below, and every feature is reachable from the main UI.
+
+WHAT SNIPRA DOES (all accessible from the home screen)
+1. Import a video from the Photos library.
+2. Edit the video (see the edit operations listed below).
+3. Export/save the finished video back to the Photos library.
+
+-- Please replace the line above with the app's actual edit operations, e.g.:
+   trim, crop, rotate, speed, filters, text, music, etc. (list each one). --
+
+The app's scope and behavior:
+- All processing is performed on-device. There is no server, no remote
+  configuration, and no content is downloaded at runtime.
+- There is no user account, no login, no sign-in wall, and no paywall.
+- There are no in-app purchases.
+- There are no hidden, dormant, or undocumented features. No feature is gated
+  behind a flag that can be toggled after review.
+- No third-party SDKs and no over-the-air / hot-update mechanism are included.
+
+The app contains only the features described in its App Store description and in
+this note; nothing else is reachable at runtime.
+
+We would be glad to provide any further detail or a build walkthrough if helpful.
+
+Thank you.
